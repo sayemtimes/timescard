@@ -1,42 +1,55 @@
-FROM php:8.2-fpm-alpine
+# ===============================
+# Stage 1: Laravel Mix Build
+# ===============================
+FROM node:18-alpine AS frontend
 
-# Set working directory
 WORKDIR /app
 
-# Install system dependencies
-RUN apk update && apk add --no-cache \
+COPY package.json package-lock.json ./
+RUN npm ci
+
+COPY resources resources
+COPY webpack.mix.js .
+RUN npm run prod
+
+
+# ===============================
+# Stage 2: PHP Runtime
+# ===============================
+FROM php:8.2-fpm-alpine
+
+WORKDIR /app
+
+RUN apk add --no-cache \
     curl \
     git \
-    build-base \
-    autoconf \
     libpng-dev \
     libzip-dev \
     libicu-dev \
+    oniguruma-dev \
     zip \
     unzip \
     mysql-client \
-    imagemagick-dev \
-    icu-dev \
-    oniguruma-dev
+    icu-dev
 
-# Install PHP extensions
 RUN docker-php-ext-install \
-    pdo \
     pdo_mysql \
     zip \
     intl \
     gd
 
-# Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Copy application files
 COPY . /app
+COPY --from=frontend /app/public /app/public
 
-# Set permissions
+RUN composer install --no-dev --optimize-autoloader \
+ && php artisan config:clear \
+ && php artisan config:cache \
+ && php artisan route:cache \
+ && php artisan view:cache
+
 RUN chown -R www-data:www-data /app/storage /app/bootstrap/cache
 
-# Expose port
 EXPOSE 9000
-
 CMD ["php-fpm"]

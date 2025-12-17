@@ -83,14 +83,11 @@ RUN apk add --no-cache --virtual .build-deps \
     autoconf \
     build-base \
     libtool \
-    nasm \
-    imagemagick-dev \
     freetype-dev \
     libjpeg-turbo-dev \
     libpng-dev \
     libicu-dev \
     openssl-dev \
-    bzip2-dev \
     libzip-dev
 
 # Install PHP extensions

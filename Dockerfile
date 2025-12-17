@@ -61,7 +61,8 @@ WORKDIR /app
 
 COPY package*.json ./
 
-RUN npm ci
+# Install dependencies with fallback to npm install if ci fails
+RUN npm ci --prefer-offline --no-audit 2>/dev/null || npm install
 
 COPY . .
 

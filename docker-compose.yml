@@ -42,9 +42,9 @@ services:
       - DB_CONNECTION=mysql
       - DB_HOST=mysql
       - DB_PORT=3306
-      - DB_DATABASE=${DB_DATABASE:-timesdigital}
-      - DB_USERNAME=${DB_USERNAME:-root}
-      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_DATABASE=${DB_DATABASE:-timescard}
+      - DB_USERNAME=${DB_USERNAME:-timescard}
+      - DB_PASSWORD=${S130379@c2025}
       - CACHE_DRIVER=redis
       - SESSION_DRIVER=redis
       - QUEUE_CONNECTION=redis
@@ -78,10 +78,10 @@ services:
     container_name: timescard-mysql
     env_file: ./docker.env
     environment:
-      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD:-root}
-      - MYSQL_DATABASE=${DB_DATABASE:-timesdigital}
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD:-S130379@c2025}
+      - MYSQL_DATABASE=${DB_DATABASE:-timescard}
       - MYSQL_USER=${DB_USERNAME:-timescard}
-      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_PASSWORD=${S130379@c2025}
     volumes:
       - mysql-data:/var/lib/mysql
       - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf:ro
@@ -136,9 +136,9 @@ services:
       - DB_CONNECTION=mysql
       - DB_HOST=mysql
       - DB_PORT=3306
-      - DB_DATABASE=${DB_DATABASE:-timesdigital}
-      - DB_USERNAME=${DB_USERNAME:-root}
-      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_DATABASE=${DB_DATABASE:-timescard}
+      - DB_USERNAME=${DB_USERNAME:-timescard}
+      - DB_PASSWORD=${S130379@c2025}
       - CACHE_DRIVER=redis
       - SESSION_DRIVER=redis
       - QUEUE_CONNECTION=redis
@@ -166,8 +166,8 @@ services:
       - timescard
     restart: unless-stopped
     environment:
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_DATABASE=${DB_DATABASE:-timesdigital}
+      - DB_PASSWORD=${S130379@c2025}
+      - DB_DATABASE=${DB_DATABASE:-timescard}
 
 networks:
   timescard:

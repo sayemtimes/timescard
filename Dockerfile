@@ -78,8 +78,24 @@ RUN apk add --no-cache \
     mysql-client \
     imagemagick
 
+# Install build dependencies for PHP extensions
+RUN apk add --no-cache --virtual .build-deps \
+    autoconf \
+    build-base \
+    libtool \
+    nasm \
+    imagemagick-dev \
+    freetype-dev \
+    libjpeg-turbo-dev \
+    libpng-dev \
+    libicu-dev \
+    openssl-dev \
+    bzip2-dev \
+    libzip-dev
+
 # Install PHP extensions
-RUN docker-php-ext-install -j$(nproc) \
+RUN docker-php-ext-configure gd --with-jpeg --with-freetype && \
+    docker-php-ext-install -j$(nproc) \
     pdo \
     pdo_mysql \
     gd \
@@ -91,6 +107,9 @@ RUN docker-php-ext-install -j$(nproc) \
     mbstring \
     tokenizer \
     xml
+
+# Remove build dependencies to reduce image size
+RUN apk del --no-cache .build-deps
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer

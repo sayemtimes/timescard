@@ -79,13 +79,9 @@ RUN apk add --no-cache \
     imagemagick
 
 # Install build dependencies for PHP extensions
-RUN apk add --no-cache --virtual .build-deps \
+RUN apk add --no-cache \
     build-base \
-    autoconf \
-    openssl-dev \
-    libpng-dev \
-    libzip-dev \
-    libicu-dev
+    autoconf
 
 # Install PHP extensions
 RUN docker-php-ext-install -j$(nproc) \
@@ -101,8 +97,8 @@ RUN docker-php-ext-install -j$(nproc) \
     tokenizer \
     xml
 
-# Remove build dependencies to reduce image size
-RUN apk del --no-cache .build-deps
+# Clean up build dependencies
+RUN apk del build-base autoconf
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer

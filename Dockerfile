@@ -81,7 +81,9 @@ RUN apk add --no-cache \
 # Install build dependencies for PHP extensions
 RUN apk add --no-cache \
     build-base \
-    autoconf
+    autoconf \
+    libzip-dev \
+    libpng-dev
 
 # Install PHP extensions
 RUN docker-php-ext-install -j$(nproc) \
@@ -98,7 +100,7 @@ RUN docker-php-ext-install -j$(nproc) \
     xml
 
 # Clean up build dependencies
-RUN apk del build-base autoconf
+RUN apk del build-base autoconf libzip-dev libpng-dev
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer

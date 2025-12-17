@@ -157,12 +157,7 @@ services:
     image: mysql:8.0
     container_name: timescard-backup
     env_file: ./docker.env
-    command: >
-      bash -c 'while true; do
-        mysqldump -h mysql -u ${DB_USERNAME:-root} -p${DB_PASSWORD} ${DB_DATABASE:-timesdigital} > /backups/backup_$(date +\%Y\%m\%d_\%H\%M\%S).sql;
-        find /backups -type f -mtime +7 -delete;
-        sleep 86400;
-      done'
+    command: sh -c "while true; do mysqldump -h mysql -u root -p${DB_PASSWORD} ${DB_DATABASE:-timesdigital} > /backups/backup_$(date +%Y%m%d_%H%M%S).sql; find /backups -type f -mtime +7 -delete; sleep 86400; done"
     volumes:
       - backup-data:/backups
     depends_on:
@@ -171,7 +166,6 @@ services:
       - timescard
     restart: unless-stopped
     environment:
-      - DB_USERNAME=${DB_USERNAME:-root}
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_DATABASE=${DB_DATABASE:-timesdigital}
 

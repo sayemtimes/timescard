@@ -80,19 +80,15 @@ RUN apk add --no-cache \
 
 # Install build dependencies for PHP extensions
 RUN apk add --no-cache --virtual .build-deps \
-    autoconf \
     build-base \
-    libtool \
-    freetype-dev \
-    libjpeg-turbo-dev \
-    libpng-dev \
-    libicu-dev \
+    autoconf \
     openssl-dev \
-    libzip-dev
+    libpng-dev \
+    libzip-dev \
+    libicu-dev
 
 # Install PHP extensions
-RUN docker-php-ext-configure gd --with-jpeg --with-freetype && \
-    docker-php-ext-install -j$(nproc) \
+RUN docker-php-ext-install -j$(nproc) \
     pdo \
     pdo_mysql \
     gd \

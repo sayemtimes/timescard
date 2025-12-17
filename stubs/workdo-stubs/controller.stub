@@ -1,0 +1,90 @@
+<?php
+
+namespace $CLASS_NAMESPACE$;
+
+use $NAMESPACE$\Models\$STUDLY_NAME$;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+use Inertia\Inertia;
+use App\Http\Controllers\Controller;
+
+class $CLASS$ extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index(Request $request)
+    {
+        return Inertia::render('$STUDLY_NAME$/index', [
+            'filters' => $request->only(['search', 'per_page', 'view', 'sort_field', 'sort_direction'])
+        ]);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        return Inertia::render('$STUDLY_NAME$/create');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            // Add more validation rules as needed
+        ]);
+
+     
+
+        return redirect()->route('$LOWER_NAME$.index')
+            ->with('success', '$STUDLY_NAME$ created successfully.');
+    }
+
+    /**
+     * Show the specified resource.
+     */
+    public function show($id)
+    {
+        return Inertia::render('$STUDLY_NAME$/public/$STUDLY_NAME$View', [
+            'id' => $id
+        ]);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit($id)
+    {
+        return Inertia::render('$STUDLY_NAME$/edit', [
+            'id' => $id
+        ]);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, $id)
+    {
+        $validated = $request->validate([
+            // Add more validation rules as needed
+        ]);
+
+        
+        return redirect()->route('$LOWER_NAME$.index')
+            ->with('success', '$STUDLY_NAME$ updated successfully.');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy($id)
+    {
+       
+        return redirect()->route('$LOWER_NAME$.index')
+            ->with('success', '$STUDLY_NAME$ deleted successfully.');
+    }
+}

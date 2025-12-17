@@ -1,0 +1,52 @@
+import React from 'react';
+import { PageTemplate } from '@/components/page-template';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { useForm } from '@inertiajs/react';
+import { ArrowLeft } from 'lucide-react';
+import { Link } from '@inertiajs/react';
+
+export default function $STUDLY_NAME$Create() {
+    const { data, setData, post, processing, errors } = useForm({
+        name: '',
+    });
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        post(route('$LOWER_NAME$.store'));
+    };
+
+    return (
+        <PageTemplate title="Create $STUDLY_NAME$" url="/$LOWER_NAME$/create">
+            <Card>
+                <CardHeader className="flex flex-row items-center justify-between">
+                    <CardTitle>Create New Item</CardTitle>
+                    <Link href={route('$LOWER_NAME$.index')}>
+                        <Button variant="outline">
+                            <ArrowLeft className="h-4 w-4 mr-2" />
+                            Back
+                        </Button>
+                    </Link>
+                </CardHeader>
+                <CardContent>
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                        <div>
+                            <Label htmlFor="name">Name</Label>
+                            <Input
+                                id="name"
+                                value={data.name}
+                                onChange={(e) => setData('name', e.target.value)}
+                                error={errors.name}
+                            />
+                        </div>
+                        <Button type="submit" disabled={processing}>
+                            Create
+                        </Button>
+                    </form>
+                </CardContent>
+            </Card>
+        </PageTemplate>
+    );
+}

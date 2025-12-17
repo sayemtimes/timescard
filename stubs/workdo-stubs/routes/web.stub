@@ -1,0 +1,34 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+use Workdo\$STUDLY_NAME$\Http\Controllers\$STUDLY_NAME$Controller;
+
+Route::middleware(['web', 'auth', 'verified', 'plan.access'])->group(function () {
+    Route::get('/$LOWER_NAME$', [$STUDLY_NAME$Controller::class, 'index'])
+        ->middleware('permission:manage-$LOWER_NAME$')
+        ->name('$LOWER_NAME$.index');
+    
+    Route::get('/$LOWER_NAME$/create', [$STUDLY_NAME$Controller::class, 'create'])
+        ->middleware('permission:create-$LOWER_NAME$')
+        ->name('$LOWER_NAME$.create');
+    
+    Route::post('/$LOWER_NAME$', [$STUDLY_NAME$Controller::class, 'store'])
+        ->middleware('permission:create-$LOWER_NAME$')
+        ->name('$LOWER_NAME$.store');
+    
+    Route::get('/$LOWER_NAME$/{id}/edit', [$STUDLY_NAME$Controller::class, 'edit'])
+        ->middleware('permission:edit-$LOWER_NAME$')
+        ->name('$LOWER_NAME$.edit');
+    
+    Route::put('/$LOWER_NAME$/{id}', [$STUDLY_NAME$Controller::class, 'update'])
+        ->middleware('permission:edit-$LOWER_NAME$')
+        ->name('$LOWER_NAME$.update');
+    
+    Route::delete('/$LOWER_NAME$/{id}', [$STUDLY_NAME$Controller::class, 'destroy'])
+        ->middleware('permission:delete-$LOWER_NAME$')
+        ->name('$LOWER_NAME$.destroy');
+});
+
+// Public route for viewing
+Route::get('/$LOWER_NAME$/{slug}', [$STUDLY_NAME$Controller::class, 'show'])
+    ->name('$LOWER_NAME$.show');

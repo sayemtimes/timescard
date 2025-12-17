@@ -1,0 +1,17 @@
+import { Package } from 'lucide-react';
+
+declare global {
+    function route(name: string): string;
+}
+
+export default {
+    title: '$STUDLY_NAME$',
+    icon: Package,
+    permission: '$LOWER_NAME$ manage',
+    children: [
+        {
+            title: 'Dashboard',
+            href: route('$LOWER_NAME$.index'),
+        },
+    ],
+};

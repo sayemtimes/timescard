@@ -1,0 +1,49 @@
+<?php
+
+namespace Workdo\$STUDLY_NAME$\Database\Seeders;
+
+use App\Models\Role;
+use App\Models\Permission;
+use Illuminate\Database\Seeder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Artisan;
+
+class PermissionTableSeeder extends Seeder
+{
+     public function run()
+    {
+        Model::unguard();
+        Artisan::call('cache:clear');
+        $module = '$STUDLY_NAME$';
+
+        $permissions = [
+            'manage-$LOWER_NAME$',
+            'create-$LOWER_NAME$',
+            'edit-$LOWER_NAME$',
+            'delete-$LOWER_NAME$',
+        ];
+
+        $roles = Role::whereIn('name', ['company', 'superadmin'])->get();
+        
+        foreach ($permissions as $value) {
+            $permission = Permission::where('name', $value)->where('module', $module)->first();
+            
+            if (!$permission) {
+                $permission = Permission::create([
+                    'name' => $value,
+                    'guard_name' => 'web',
+                    'module' => $module,
+                    'created_by' => 0,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ]);
+            }
+            
+            foreach ($roles as $role) {
+                if (!$role->hasPermissionTo($value)) {
+                    $role->givePermissionTo($permission);
+                }
+            }
+        }
+    }
+}

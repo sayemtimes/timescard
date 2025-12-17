@@ -1,0 +1,9 @@
+import $STUDLY_NAME$Form from './form';
+
+interface Props {
+    item: any;
+}
+
+export default function Edit({ item }: Props) {
+  return <$STUDLY_NAME$Form item={item} />;
+}

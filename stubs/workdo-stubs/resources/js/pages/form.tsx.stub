@@ -1,0 +1,137 @@
+import React from 'react';
+import { Head, useForm } from '@inertiajs/react';
+import { PageTemplate } from '@/components/page-template';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Checkbox } from '@/components/ui/checkbox';
+import { useTranslation } from 'react-i18next';
+import { toast } from '@/components/custom-toast';
+
+interface $STUDLY_NAME$Item {
+  id: number;
+  name: string;
+  slug: string;
+  is_active: boolean;
+}
+
+interface Props {
+  item?: $STUDLY_NAME$Item;
+}
+
+export default function $STUDLY_NAME$Form({ item }: Props) {
+  const { t } = useTranslation();
+  const isEdit = !!item;
+
+  const { data, setData, post, put, processing, errors } = useForm({
+    name: item?.name || '',
+    is_active: item?.is_active ?? true,
+  });
+  
+  React.useEffect(() => {
+    if (Object.keys(errors).length > 0) {
+      Object.entries(errors).forEach(([field, message]) => {
+        toast.error(`${field}: ${message}`);
+      });
+    }
+  }, [errors]);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (isEdit) {
+      put(route('$LOWER_NAME$.update', item!.id));
+    } else {
+      post(route('$LOWER_NAME$.store'));
+    }
+  };
+
+  const breadcrumbs = [
+    { title: t('Dashboard'), href: route('dashboard') },
+    { title: t('$STUDLY_NAME$'), href: route('$LOWER_NAME$.index') },
+    { title: isEdit ? item!.name : t('Create $STUDLY_NAME$') }
+  ];
+
+  const pageTitle = isEdit ? `Edit ${item?.name}` : 'Create $STUDLY_NAME$';
+  const pageUrl = isEdit ? route('$LOWER_NAME$.edit', item!.id) : route('$LOWER_NAME$.create');
+
+  return (
+    <PageTemplate title={pageTitle} url={pageUrl} breadcrumbs={breadcrumbs}>
+      <Head title={pageTitle} />
+      
+      <div className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b mb-6">
+        <div className="flex items-center justify-between py-3 px-1">
+          <div className="flex items-center space-x-2">
+            {processing && (
+              <span className="text-xs text-red-600 bg-red-50 dark:bg-red-900/20 px-2 py-1 rounded">
+                {isEdit ? t('Updating...') : t('Creating...')}
+              </span>
+            )}
+          </div>
+          <div className="flex items-center space-x-2">
+            <Button 
+              onClick={handleSubmit} 
+              disabled={processing} 
+              className="px-6 h-9"
+            >
+              {processing ? (isEdit ? t('Updating...') : t('Creating...')) : (isEdit ? t('Update $STUDLY_NAME$') : t('Create $STUDLY_NAME$'))}
+            </Button>
+          </div>
+        </div>
+      </div>
+      
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2 space-y-4">
+          <Card>
+            <div className="p-3 border-b bg-muted/30">
+              <h3 className="text-base font-medium">
+                <span className="bg-gray-100 dark:bg-gray-700 text-xs rounded-full h-5 w-5 inline-flex items-center justify-center mr-1.5">1</span>
+                {t("Basic Information")}
+              </h3>
+            </div>
+            <div className="p-3 space-y-3">
+              <div>
+                <Label className="text-sm mb-1 block">{t("Name")} *</Label>
+                <Input
+                  value={data.name}
+                  onChange={(e) => setData('name', e.target.value)}
+                  className="h-9 text-sm"
+                  placeholder={t("Enter name")}
+                  required
+                />
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="is_active"
+                  checked={data.is_active}
+                  onCheckedChange={(checked) => setData('is_active', !!checked)}
+                />
+                <Label htmlFor="is_active" className="text-sm">
+                  {t("Active")}
+                </Label>
+              </div>
+            </div>
+          </Card>
+        </div>
+        
+        <div className="lg:col-span-1">
+          <Card className="sticky top-4">
+            <div className="p-3 border-b bg-muted/30">
+              <h3 className="text-base font-medium">{t("Preview")}</h3>
+            </div>
+            <div className="p-3 bg-gray-50 dark:bg-gray-800/50 rounded-b-lg">
+              <div className="text-center">
+                <h4 className="font-medium">{data.name || t('Untitled')}</h4>
+                <p className="text-sm text-gray-500 mt-1">
+                  {data.is_active ? t('Active') : t('Inactive')}
+                </p>
+              </div>
+            </div>
+          </Card>
+        </div>
+      </div>
+    </PageTemplate>
+  );
+}

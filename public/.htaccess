@@ -1,0 +1,47 @@
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
+
+    # CORS Headers for assets
+    <IfModule mod_headers.c>
+        # Allow assets to be loaded from any domain
+        <FilesMatch "\.(js|css|woff|woff2|ttf|eot|svg|png|jpg|jpeg|gif|ico|pdf|doc|docx|csv|zip|mp4|mp3)$">
+            Header set Access-Control-Allow-Origin "*"
+            Header set Access-Control-Allow-Methods "GET, POST, OPTIONS"
+            Header set Access-Control-Allow-Headers "*"
+        </FilesMatch>
+    </IfModule>
+
+    RewriteEngine On
+
+    # Allow direct access to storage files
+    RewriteCond %{REQUEST_URI} ^/storage/(.*)$
+    RewriteRule ^storage/(.*)$ storage/$1 [L]
+
+    # Handle Authorization Header
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Handle X-XSRF-Token Header
+    RewriteCond %{HTTP:x-xsrf-token} .
+    RewriteRule .* - [E=HTTP_X_XSRF_TOKEN:%{HTTP:X-XSRF-Token}]
+
+    # Redirect Trailing Slashes If Not A Folder...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} (.+)/$
+    RewriteRule ^ %1 [L,R=301]
+
+    # Send Requests To Front Controller...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L]
+    
+    # Allow access to index.php
+    <Files "index.php">
+        Require all granted
+    </Files>
+</IfModule>
+
+# Allow access to the public directory
+Require all granted
